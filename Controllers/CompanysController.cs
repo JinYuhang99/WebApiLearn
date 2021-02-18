@@ -11,6 +11,8 @@ namespace WebApiLearn.Controllers
 {
 
     [ApiController]
+    [Route("api/companyies")]
+    // [Route("api/[Controller]")]  = api/CompanysController 去掉controller
     public class CompanysController: ControllerBase
     {
         private readonly ICompanyRepository _companyRepository;
@@ -28,7 +30,32 @@ namespace WebApiLearn.Controllers
         public async Task<IActionResult> GetConpanies()
         {
             var companies = await _companyRepository.GetCompaniesAsync();
-            return new JsonResult(companies);
+            //404 notfound(); 空集合 不一定是404
+            return Ok(companies);
+        }
+
+        [HttpGet] //api/Companies/{companyId}
+        [Route("{companyId}")]
+        public async Task<IActionResult> GetConpanies(Guid companyId)
+        {
+            //是否存在
+            //var exist = await _companyRepository.CompanyExistsAsync(companyID);
+            ////如果并发量过大,则可能出现错误
+            //if (!exist)
+            //{
+            //    return NotFound();
+            //}
+            //比上述方法要好一些
+            var company = await _companyRepository.GetCompanyAsync(companyId);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var companie = await _companyRepository.GetCompanyAsync(companyId);
+            //404 notfound(); 空集合 不一定是404
+            return Ok(companie);
+            //return new JsonResult(companie); 返回json
         }
     }
 }
