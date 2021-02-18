@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiLearn</name>
+    </assembly>
+    <members>
+        <member name="P:WebApiLearn.Entities.Company.Introduction">
+            <summary>
+            简介
+            </summary>
+        </member>
+    </members>
+</doc>
