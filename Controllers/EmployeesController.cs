@@ -18,8 +18,8 @@ namespace WebApiLearn.Controllers
         {
             Employee emp = new Employee();
             List<Employee> employees = new List<Employee>();
-            for(int i = 0; i < 5; i++) { 
-                emp.CompanyId = Guid.NewGuid();
+            for(int i = 0; i < 5; i++) {
+                emp.CompanyId = Guid.NewGuid(); 
                 employees.Add(emp);
             }
             return employees;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,18 @@ namespace WebApiLearn
                 option.UseSqlite(connectionString: "Data Source=routine.db");
             });
 
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllers(setup =>
+            {
+                //默认情况下位false
+                //如果服务器和请求的类型不一致,那么就会返回406状态码,如果服务器只支持json,但是webapi消费者给传入的为xml,则会返回406状态码
+                setup.ReturnHttpNotAcceptable = true;
+                //默认的为数组的第一个元素的格式,即json,可以在数组中追加xml格式,两个都支持,但默认的还是json
+                //setup.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                //这样就是在数组中的第0个位置添加xml,即xml为默认的格式了
+                //setup.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
+                //.net 3.0之后 可以直接这样写,等同于上边的追加数组
+            }).AddXmlDataContractSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

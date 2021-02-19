@@ -16,6 +16,7 @@ namespace WebApiLearn
     {
         public static void Main(string[] args)
         {
+            //restful webapi
             CreateHostBuilder(args).Build().Run();
 
             //using (var scop = host.Services.CreateScope())
