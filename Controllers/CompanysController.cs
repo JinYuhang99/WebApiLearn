@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace WebApiLearn.Controllers
 
     [ApiController]
     [Route("api/companyies")]
+    //跨域
+    [EnableCors("CorsPolicy")]
     // [Route("api/[Controller]")]  = api/CompanysController 去掉controller
     public class CompanysController : ControllerBase
     {
@@ -36,13 +39,25 @@ namespace WebApiLearn.Controllers
         //Task<ActionResult<IEnumerable<CompanyDto>>>  Task<IActionResult>
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetConpanies()
         {
-            //数据库层的model
-            var companies = await _companyRepository.GetCompaniesAsync();
-            //给前台传的model
-            var companyDtos = _mapper.Map<IEnumerable<CompanyDto>>(companies);
-
+            try
+            {
+                //数据库层的model
+                var companies = await _companyRepository.GetCompaniesAsync();
+                //给前台传的model
+                var companyDtos = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+                return Ok(companyDtos);
+            }
+            catch (Exception ex)
+            {
+                //var companies = await _companyRepository.GetCompaniesAsync();
+                Company com = new Company();
+                //com.Introduction = ex.ToString();
+                //_companyRepository.AddCompany(com);
+                com.Introduction = ex.ToString();
+                return null;
+            }
             //404 notfound(); 空集合 不一定是404
-            return Ok(companyDtos);
+           
         }
 
         [HttpGet] //api/Companies/{companyId}
@@ -57,15 +72,25 @@ namespace WebApiLearn.Controllers
             //    return NotFound();
             //}
             //比上述方法要好一些
-            var company = await _companyRepository.GetCompanyAsync(companyId);
-            if (company == null)
+            try
             {
-                return NotFound();
-            }
+                var company = await _companyRepository.GetCompanyAsync(companyId);
+                if (company == null)
+                {
+                    return NotFound();
+                }
 
-            var companie = _mapper.Map<CompanyDto>(company);
-            //404 notfound(); 空集合 不一定是404
-            return Ok(companie);
+                var companie = _mapper.Map<CompanyDto>(company);
+                //404 notfound(); 空集合 不一定是404
+                return Ok(companie);
+            }
+            catch (Exception ex)
+            {
+                CompanyDto dto = new CompanyDto();
+                dto.CompanyName = ex.ToString();
+                var CC = _mapper.Map<CompanyDto>(dto);
+                return CC;
+            }
             //return new JsonResult(companie); 返回json
         }
     }

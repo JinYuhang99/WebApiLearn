@@ -65,6 +65,17 @@ namespace WebApiLearn
             }).AddXmlDataContractSerializerFormatters();
             // Ù–‘”≥…‰
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //øÁ”Ú
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: "CorsPolicy",
+                     builder => builder.WithOrigins("http://localhost:44325/")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed((host) => true));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +86,10 @@ namespace WebApiLearn
                 app.UseDeveloperExceptionPage();
             }
 
+            //øÁ”Ú
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
