@@ -36,6 +36,7 @@ namespace WebApiLearn.Services
         }
 
         public async Task<Company> GetCompanyAsync(Guid companyId)
+        
         {
             if (companyId == null)
             {

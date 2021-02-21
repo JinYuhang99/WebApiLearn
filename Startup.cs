@@ -46,7 +46,9 @@ namespace WebApiLearn
 
             services.AddDbContext<RoutineDbContext>(option =>
             {
-                option.UseSqlite(connectionString: "Data Source=routine.db");
+                //option.UseSqlite(connectionString: "Data Source=routine.db");
+                option.UseSqlServer(Configuration.GetConnectionString("SchoolContext"));
+
             });
 
             //services.AddControllers();
@@ -61,6 +63,8 @@ namespace WebApiLearn
                 //setup.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
                 //.net 3.0之后 可以直接这样写,等同于上边的追加数组
             }).AddXmlDataContractSerializerFormatters();
+            //属性映射
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
