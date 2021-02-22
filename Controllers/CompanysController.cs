@@ -86,8 +86,10 @@ namespace WebApiLearn.Controllers
             }
             catch (Exception ex)
             {
-                CompanyDto dto = new CompanyDto();
-                dto.CompanyName = ex.ToString();
+                CompanyDto dto = new CompanyDto
+                {
+                    CompanyName = ex.ToString()
+                };
                 var CC = _mapper.Map<CompanyDto>(dto);
                 return CC;
             }
