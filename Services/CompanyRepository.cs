@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiLearn.Data;
@@ -72,17 +74,22 @@ namespace WebApiLearn.Services
             return await this._content.Companies.AnyAsync(x => x.Id == companyId);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeeAsync(Guid companyId)
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId)
         {
             if (companyId == null)
             {
                 throw new ArgumentNullException(nameof(companyId));
             }
-
+            
+            //查看sql语句
+            //var cc = this._content.Employees
+            //   .Where(x => x.CompanyId == companyId)
+            //   .OrderBy(x => x.EmployeeNo)
+            //cc.AsQueryable();
             return await this._content.Employees
                 .Where(x => x.CompanyId == companyId)
                 .OrderBy(x => x.EmployeeNo)
-                .ToListAsync();
+                .ToListAsync(); 
         }
 
         public async Task<Employee> GetEmployeeAsync(Guid companyId, Guid employeeId)
@@ -99,6 +106,7 @@ namespace WebApiLearn.Services
             return await this._content.Employees
                 .Where(x => x.CompanyId == companyId && x.Id == employeeId)
                 .FirstOrDefaultAsync();
+
         }
 
         public void AddEmployee(Guid companyId, Employee employee)
